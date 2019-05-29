@@ -47,7 +47,7 @@ def get_recent(limit):
 		name = track["name"]
 		url = track["url"]
 
-		tracklist.append(TrackInfo._make((artist, name, url)))
+		tracklist.append(TrackInfo(artist, name, url))
 
 	#	print(f"Track: {name}")
 	#	print(f"Artist: {artist}")
@@ -84,7 +84,7 @@ def get_top(limit):
 		artist = track["artist"]["name"]
 		name = track["name"]
 		url = track["url"]
-		tracklist.append(TrackInfo._make((artist, name, url)))
+		tracklist.append(TrackInfo(artist, name, url))
 
 	return tracklist
 
