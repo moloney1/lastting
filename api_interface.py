@@ -2,28 +2,33 @@ import os
 import json
 import pprint
 import requests
-from creds.creds import apikey
+from creds.creds import apikey, user
 
 method = "user.getrecenttracks"
-user = "recoilmoney"
 format_ = "json"
-limit = "10"
 BASE_URL = "http://ws.audioscrobbler.com/2.0/"
 
 pp = pprint.PrettyPrinter(indent=4)
 
-# return list of (artist, title, url)
-def get_recent(limit):
-
-	recent_tracks = []
-
+def base_request():
 	payload = {
-		"method": "user.getrecenttracks",
 		"user": user,
-		"limit": limit,
 		"api_key": apikey,
 		"format": format_
 	}
+	return payload
+
+# return list of (artist, title, url)
+def get_recent(limit):
+
+	tracklist = []
+
+	payload = {
+		"method": "user.getrecenttracks",
+		"limit": limit
+	}
+	payload.update(base_request())
+#	print(payload)
 	
 	if not os.path.exists('data.json'):
 		r = requests.get(BASE_URL, params=payload)
@@ -40,23 +45,28 @@ def get_recent(limit):
 		name = track["name"]
 		url = track["url"]
 
-		recent_tracks.append((artist, name, url))
+		tracklist.append((artist, name, url))
 
-		print(f"Track: {name}")
-		print(f"Artist: {artist}")
-		print(f"URL: {url}")
-
-def get_top(limit):
-	period = "7day"
+	#	print(f"Track: {name}")
+	#	print(f"Artist: {artist}")
+	#	print(f"URL: {url}")
 	
+	return tracklist
+
+# return list of (artist, title, url)
+def get_top(limit):
+	
+	tracklist = []	
+
+	period = "7day"
+
 	payload = {
 		"method": "user.gettoptracks",
-		"user": user,
 		"limit": limit,
-		"period": period,
-		"api_key": apikey,
-		"format": format_
+		"period": period
 	}
+	payload.update(base_request())
+	
 	if not os.path.exists('data_top.json'):
 		r = requests.get(BASE_URL, params=payload)
 		data = r.json()
@@ -65,19 +75,20 @@ def get_top(limit):
 	else:
 		print("loading from file..")
 		data = json.load(open("data_top.json", "r"))
-	pp.pprint(data)
+#	pp.pprint(data)
 	
 	top_tracks = data["toptracks"]["track"]
 	for track in top_tracks:
 		artist = track["artist"]["name"]
 		name = track["name"]
 		url = track["url"]
+		tracklist.append((artist, name, url))
 
-		print(f"Track: {name}")
-		print(f"Artist: {artist}")
-		print(f"URL: {url}")
-	
+	return tracklist
 
 if __name__ == "__main__":
-#	get_recent(1)
-	get_top(1)
+	# recent = get_recent(1)
+	top = get_top(1)
+	pp.pprint(top)
+
+
