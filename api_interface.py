@@ -16,17 +16,18 @@ def get_recent(limit):
 
 	recent_tracks = []
 
+	payload = {
+		"method": "user.getrecenttracks",
+		"user": user,
+		"limit": limit,
+		"api_key": apikey,
+		"format": format_
+	}
+
 	pp = pprint.PrettyPrinter(indent=4)
-	method = "user.getrecenttracks"
-	url = BASE_URL
-	url += f"?method={method}"
-	url += f"&user={user}"
-	url += f"&limit={limit}"
-	url += f"&api_key={apikey}"
-	url += "&format=json"
 	
 	if not os.path.exists('data.json'):
-		r = requests.get(url)
+		r = requests.get(BASE_URL, params=payload)
 		data = r.json()
 		with open("data.json", "w") as f:
 			json.dump(data, f)
