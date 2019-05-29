@@ -2,6 +2,7 @@ import os
 import json
 import pprint
 import requests
+from collections import namedtuple
 from creds.creds import apikey, user
 
 method = "user.getrecenttracks"
@@ -9,6 +10,7 @@ format_ = "json"
 BASE_URL = "http://ws.audioscrobbler.com/2.0/"
 
 pp = pprint.PrettyPrinter(indent=4)
+TrackInfo = namedtuple("TrackInfo", "artist, name, url")
 
 def base_request():
 	payload = {
@@ -45,7 +47,7 @@ def get_recent(limit):
 		name = track["name"]
 		url = track["url"]
 
-		tracklist.append((artist, name, url))
+		tracklist.append(TrackInfo._make((artist, name, url)))
 
 	#	print(f"Track: {name}")
 	#	print(f"Artist: {artist}")
@@ -82,13 +84,18 @@ def get_top(limit):
 		artist = track["artist"]["name"]
 		name = track["name"]
 		url = track["url"]
-		tracklist.append((artist, name, url))
+		tracklist.append(TrackInfo._make((artist, name, url)))
 
 	return tracklist
 
 if __name__ == "__main__":
-	# recent = get_recent(1)
-	top = get_top(1)
-	pp.pprint(top)
-
+	recent = get_recent(5)
+	top = get_top(5)
+	
+	print("Recent Tracks:")
+	for track in recent:
+		print(f"{track.artist} - {track.name}")
+	print("Top Tracks:")
+	for track in top:
+		print(f"{track.artist} - {track.name}")
 
