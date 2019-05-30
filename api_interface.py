@@ -32,14 +32,14 @@ def get_recent(limit):
 	payload.update(base_request())
 #	print(payload)
 	
-	if not os.path.exists('data.json'):
+	if not os.path.exists('data/data.json'):
 		r = requests.get(BASE_URL, params=payload)
 		data = r.json()
-		with open("data.json", "w") as f:
+		with open("data/data.json", "w") as f:
 			json.dump(data, f)
 	else:
 		print("loading from file..")
-		data = json.load(open("data.json", "r"))
+		data = json.load(open("data/data.json", "r"))
 	
 	tracks = data["recenttracks"]["track"]
 	for track in tracks:
@@ -69,14 +69,14 @@ def get_top(limit):
 	}
 	payload.update(base_request())
 	
-	if not os.path.exists('data_top.json'):
+	if not os.path.exists('data/data_top.json'):
 		r = requests.get(BASE_URL, params=payload)
 		data = r.json()
-		with open("data_top.json", "w") as f:
+		with open("data/data_top.json", "w") as f:
 			json.dump(data, f)
 	else:
 		print("loading from file..")
-		data = json.load(open("data_top.json", "r"))
+		data = json.load(open("data/data_top.json", "r"))
 #	pp.pprint(data)
 	
 	top_tracks = data["toptracks"]["track"]
