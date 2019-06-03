@@ -37,7 +37,7 @@ def open_browser(button):
 	webbrowser.open_new('http://www.python.org')
 
 def get_track_listing():
-	tracks = get_recent(5)
+	tracks = get_recent(20)
 	track_listing = []
 	for track in tracks:
 		track_listing.append(f"{track.artist} - {track.name}")
